@@ -1,0 +1,26 @@
+body{
+    background:url(http://static.8264.com/static/images/common/bg/bg3.jpg) no-repeat center center fixed;
+    background-position: 50% 0px;
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    background-size:cover;
+}
+.container-box{
+    margin-top: 100px;
+
+}
+.box1{
+    width:35%;
+    height: 30%;
+    position: fixed;
+    margin: 20px 50px;
+    background: #FFFFFF;
+    border-radius: 10px;
+}
+
+.form-title{
+    align-content: center;
+    margin-left: 90px;
+}
