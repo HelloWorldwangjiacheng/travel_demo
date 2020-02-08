@@ -31,8 +31,8 @@ public class GithubAuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
-//    @Autowired
-//    private UserMapper userMapper;
+    @Autowired
+    private UserMapper userMapper;
 
 //    @Autowired
 //    private UserService userService;
@@ -55,21 +55,21 @@ public class GithubAuthorizeController {
         GithubUser githubUser = githubProvider.getUser(accessToken);
 //        System.out.println(githubUser.getName());
         if(githubUser != null && githubUser.getId() != null){
-//            User user = new User();
-//            String token = UUID.randomUUID().toString();
-//            user.setToken(token);
-//            user.setUserName(githubUser.getName());
-//            user.setAccountId(String.valueOf(githubUser.getId()));//将id强制转换为String类型
-//            user.setAvatarUrl(githubUser.getAvatarUrl());
-//
+            User user = new User();
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            user.setUserName(githubUser.getName());
+            user.setAccountId(String.valueOf(githubUser.getId()));//将id强制转换为String类型
+            user.setAvatarUrl(githubUser.getAvatarUrl());
+
 //            userService.createOrUpdate(user);
-//
-////            userMapper.insert(user);
-//            Cookie cookie = new Cookie("token",token);
-//            response.addCookie(cookie);
+
+            userMapper.githubInsert(user);
+            Cookie cookie = new Cookie("token",token);
+            response.addCookie(cookie);
 
             // 登录成功，写cookie和session
-            request.getSession().setAttribute("user",githubUser);
+            request.getSession().setAttribute("user",user);
             return "redirect:/";
         }else{
             //登录失败，重新登录

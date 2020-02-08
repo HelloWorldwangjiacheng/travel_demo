@@ -2,13 +2,14 @@ package com.travel.community.travel_demo.controller;
 
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -35,9 +36,40 @@ public class UserLoginController {
         return "login";
     }
 
+//    @RequestMapping("/successLogin")
+//    public String successLogin(){
+//        return "successLogin";
+//    }
 
-    @RequestMapping("/successLogin")
-    public String successLogin() { return "successLogin"; }
+//    @ResponseBody
+    @RequestMapping(value = "/successLogin", method = RequestMethod.POST)
+    public String successLogin(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam(name = "userName") String userName)
+    {
+        if(userName != null){
+            User user = new User();
+//            String token = UUID.randomUUID().toString();
+            String token = userMapper.selectUserToken(userName);
+            user.setToken(token);
+            user.setUserName(userMapper.selectUserName(userName));
+            user.setAccountId(userName);
+//            user.setAvatarUrl(githubUser.getAvatarUrl());
+
+//            userMapper.githubInsert(user);
+            Cookie cookie = new Cookie("token",token);
+            response.addCookie(cookie);
+
+            // 登录成功，写cookie和session
+            request.getSession().setAttribute("user",user);
+            return "redirect:/";
+        }else{
+            //登录失败，重新登录
+            return "redirect:/";
+        }
+//        return "successLogin";
+    }
 
     @RequestMapping("/successRegister")
     public String successRegister() { return "successRegister"; }
@@ -45,8 +77,8 @@ public class UserLoginController {
     @ResponseBody
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String select(@RequestBody User user) {
-        System.out.println(user.getUserName());
-        String result = userMapper.selectUserName(user.getUserName());
+        System.out.println(user.getUserName()+"---"+user.getAccountId());
+        String result = userMapper.selectUserName(user.getAccountId());
         System.out.println(result);
         if (result == null) {
             return "0";
@@ -56,31 +88,55 @@ public class UserLoginController {
 
     @ResponseBody
     @RequestMapping(value = "/selectUserName", method = RequestMethod.POST)
-    public String selectUserName(@RequestBody User user) {
+    public String selectUserName(@RequestBody User user,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+    {
         String userName = user.getUserName();
+        String accountId = userName;
         String userPassword = user.getUserPassword();
-        System.out.println(userName + userPassword);
+        System.out.println(accountId+"---"+userName+"---"+userPassword);
 
         String result = "-1";
 
         //将输入的密码加密
-        String passwordMD5 = passwordMD5(userName, userPassword);
+        String passwordMD5 = passwordMD5(accountId, userPassword);
 
         //用户不存在
-        if (userMapper.selectUserName(userName) == null) {
+        if (userMapper.selectAccountId(accountId) == null) {
 //            return "用户不存在";
             result = "0";
+            System.out.println(accountId+"---"+userName+"---"+userPassword);
             return result;
             //用户存在，但密码输入错误
-        }else
-        if(!userMapper.selectUserPassword(userName).equals(passwordMD5) ){
+        }else if(!userMapper.selectUserPassword(accountId).equals(passwordMD5) ){
             result = "1";
             return result;
 //            return "账号或密码输入错误";
-        }else if(userMapper.selectUserPassword(userName).equals(passwordMD5)) {
-            result = "2";
+        }else if(userMapper.selectUserPassword(accountId).equals(passwordMD5)) {
+            try{
+                result = "2";
+                System.out.println(result);
+
+                User user1 = new User();
+                String token = userMapper.selectUserToken(accountId);
+                user1.setToken(token);
+                user1.setUserName(userMapper.selectUserName(accountId));
+                user1.setAccountId(accountId);
+//            user.setAvatarUrl(githubUser.getAvatarUrl());
+
+                Cookie cookie = new Cookie("token",token);
+                response.addCookie(cookie);
+
+                // 登录成功，写cookie和session
+                request.getSession().setAttribute("user",user1);
+
 //            return "成功登录";
-            return result;
+                return result;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
         return result;
     }
@@ -89,16 +145,26 @@ public class UserLoginController {
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     public String addUser(@RequestBody User user) {
         String userName = user.getUserName();
+        String accountId = user.getAccountId();
         String userPassword = user.getUserPassword();
-        System.out.println(userName + "***" + userPassword);
-        String passwordMD5 = passwordMD5(userName, userPassword);
+        System.out.println(accountId+"--"+userName+"--"+userPassword);
+        String passwordMD5 = passwordMD5(accountId, userPassword);
         String token = UUID.randomUUID().toString();
+        User user1 = new User();
 
+        user1.setUserName(user.getUserName());
+        user1.setAccountId(user.getAccountId());
+        user1.setUserPassword(passwordMD5);
+        user1.setToken(token);
+        user1.setGmtCreate(System.currentTimeMillis());
 
-        userMapper.addUser(userName,passwordMD5);
+        userMapper.addUser(user1);
         return "1";
     }
 
+    /**
+     *     对密码进行MD5加密
+     */
     public String passwordMD5(String userName, String userPassword) {
         // 需要加密的字符串
         String src = userName + userPassword;
