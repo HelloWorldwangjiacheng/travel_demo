@@ -5,6 +5,7 @@ import com.travel.community.travel_demo.mapper.QuestionMapper;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.Question;
 import com.travel.community.travel_demo.model.User;
+import com.travel.community.travel_demo.model.UserExample;
 import com.travel.community.travel_demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class PublishController {
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private QuestionService questionService;
@@ -66,7 +71,12 @@ public class PublishController {
 //        }
 
 
-        User user = (User) request.getSession().getAttribute("user");
+        User user1 = (User) request.getSession().getAttribute("user");
+
+        UserExample example = new UserExample();
+        example.createCriteria().andAccountIdEqualTo(user1.getAccountId());
+        List<User> users = userMapper.selectByExample(example);
+        User user = users.get(0);
 
         if (user == null){
             model.addAttribute("error","用户未登录");

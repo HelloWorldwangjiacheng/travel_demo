@@ -3,6 +3,7 @@ package com.travel.community.travel_demo.controller;
 import com.travel.community.travel_demo.dto.PaginationDTO;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.User;
+import com.travel.community.travel_demo.model.UserExample;
 import com.travel.community.travel_demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class ProfileController1 {
@@ -36,7 +38,13 @@ public class ProfileController1 {
     )
     {
 
-        User user = (User) request.getSession().getAttribute("user");
+        User user1 = (User) request.getSession().getAttribute("user");
+
+        UserExample example = new UserExample();
+        example.createCriteria().andAccountIdEqualTo(user1.getAccountId());
+        List<User> users = userMapper.selectByExample(example);
+        User user = users.get(0);
+
         if (user == null){
             return "redirect:/";
         }
@@ -52,7 +60,6 @@ public class ProfileController1 {
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","最新回复");
         }
-
 
         return "profile";
     }

@@ -7,9 +7,12 @@ import com.travel.community.travel_demo.exception.CustomizeException;
 import com.travel.community.travel_demo.mapper.QuestionMapper;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.Question;
+import com.travel.community.travel_demo.model.QuestionExample;
 import com.travel.community.travel_demo.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,32 +34,34 @@ public class QuestionService {
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         //offset偏移
         Integer offset = size * (page - 1);
-
         Integer totalPage;
         //总记录数
-        Integer totalCount = questionMapper.count();
-
-        if (totalCount % size == 0){
-            totalPage = totalCount/size;
-        } else {
-            totalPage = totalCount/size +1;
-        }
+//        Integer totalCount = questionMapper.count();
+        QuestionExample example = new QuestionExample();
+        Integer totalCount = (int) questionMapper.countByExample(example);
+        //得到总页数
+        if (totalCount % size == 0) totalPage = totalCount/size;
+        else totalPage = totalCount/size +1;
+        //容错校验
         if (page<1){ page=1; }
         if (page>totalPage){ page = totalPage; }
         paginationDTO.setPagination(totalPage,page);
 
-        List<Question> questions = questionMapper.list(offset,size);
+//        List<Question> questions = questionMapper.list(offset,size);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("id desc");
+        RowBounds rowBounds = new RowBounds(offset, size);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, rowBounds);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 
         for (Question question : questions){
-            User user  = userMapper.findById(question.getCreator());
-
+//            User user  = userMapper.findById(question.getCreator());
+            User user =  userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-
         paginationDTO.setData(questionDTOS);
         return paginationDTO;
     }
@@ -72,11 +77,11 @@ public class QuestionService {
         Integer totalPage;
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         //totalCount是数据库question表中的记录的数量
-        Integer totalCount = questionMapper.countByUserId(userId);
-//        QuestionExample questionExample = new QuestionExample();
-//        questionExample.createCriteria()
-//                .andCreatorEqualTo(userId);
-//        Integer totalCount = (int) questionMapper.countByExample(questionExample);
+//        Integer totalCount = questionMapper.countByUserId(userId);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria()
+                .andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
 
         if (totalCount%size == 0){
             totalPage = totalCount/size;
@@ -91,17 +96,17 @@ public class QuestionService {
         Integer offset = size*(page-1);
         if (offset<1) offset=1;
 
-        List<Question> questions = questionMapper.listByUserId(userId,offset,size);
-//        QuestionExample example = new QuestionExample();
-//        example.createCriteria()
-//                .andCreatorEqualTo(userId);
-//        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
+//        List<Question> questions = questionMapper.listByUserId(userId,offset,size);
+        QuestionExample example = new QuestionExample();
+        example.createCriteria()
+                .andCreatorEqualTo(userId);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
 
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions){
-//            User user = userMapper.selectByPrimaryKey(question.getCreator());
-            User user  = userMapper.findById(question.getCreator());
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
+//            User user  = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);//将question上的所有属性复制到questionDTO上去
             questionDTO.setUser(user);
@@ -113,8 +118,8 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Long id) {
-//        Question question = questionMapper.selectByPrimaryKey(id);
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
+//        Question question = questionMapper.getById(id);
         //自定义异常抛出
         if (question == null){
             //当你查找的问题不存在时，比如你找id为9999999999的问题，显然是不存在的，就会抛出这个异常
@@ -123,8 +128,8 @@ public class QuestionService {
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
 
-//        User user = userMapper.selectByPrimaryKey(question.getCreator());
-        User user  = userMapper.findById(question.getCreator());
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
+//        User user  = userMapper.findById(question.getCreator());
         questionDTO.setUser(user);
 
         return questionDTO;
@@ -138,14 +143,14 @@ public class QuestionService {
             question.setViewCount(0);
             question.setCommentCount(0);
             question.setLikeCount(0);
-//            questionMapper.create(question);
+//            questionMapper.createQuestion(question);
             //创建实质就是插入数据库
-            questionMapper.createQuestion(question);
+            questionMapper.insert(question);
         }else {
             //更新
-            questionMapper.update(question);
+//            questionMapper.update(question);
 //            question.setGmtModified(question.getGmtCreate());
-            /*
+
             Question updateQuestion = new Question();
             updateQuestion.setTitle(question.getTitle());
             updateQuestion.setDescription(question.getDescription());
@@ -157,9 +162,6 @@ public class QuestionService {
             if (updated != 1){
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
-
-             */
-
 
         }
     }

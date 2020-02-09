@@ -2,6 +2,7 @@ package com.travel.community.travel_demo.controller;
 
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.User;
+import com.travel.community.travel_demo.model.UserExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -68,11 +70,15 @@ public class UserLoginController {
         if(userName != null){
             User user = new User();
 //            String token = UUID.randomUUID().toString();
-            String token = userMapper.selectUserToken(userName);
+//            String token = userMapper.selectUserToken(userName);
+            UserExample example = new UserExample();
+            example.createCriteria().andAccountIdEqualTo(userName);
+            List<User> users = userMapper.selectByExample(example);
+            String token = users.get(0).getToken();
             user.setToken(token);
-            user.setUserName(userMapper.selectUserName(userName));
+//            user.setUserName(userMapper.selectUserName(userName));
+            user.setUserName(users.get(0).getUserName());
             user.setAccountId(userName);
-//            user.setAvatarUrl(githubUser.getAvatarUrl());
 
 //            userMapper.githubInsert(user);
             Cookie cookie = new Cookie("token",token);
@@ -95,7 +101,11 @@ public class UserLoginController {
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public String select(@RequestBody User user) {
         System.out.println(user.getUserName()+"---"+user.getAccountId());
-        String result = userMapper.selectUserName(user.getAccountId());
+//        String result = userMapper.selectUserName(user.getAccountId());
+        UserExample example = new UserExample();
+        example.createCriteria().andAccountIdEqualTo(user.getAccountId());
+        List<User> users = userMapper.selectByExample(example);
+        String result = users.get(0).getUserName();
         System.out.println(result);
         if (result == null) {
             return "0";
@@ -119,26 +129,35 @@ public class UserLoginController {
         //将输入的密码加密
         String passwordMD5 = passwordMD5(accountId, userPassword);
 
+        UserExample example = new UserExample();
+        example.createCriteria().andAccountIdEqualTo(accountId);
+        List<User> users = userMapper.selectByExample(example);
+
         //用户不存在
-        if (userMapper.selectAccountId(accountId) == null) {
+//        userMapper.selectAccountId(accountId) == null
+        if (users.get(0).getAccountId() == null) {
 //            return "用户不存在";
             result = "0";
             System.out.println(accountId+"---"+userName+"---"+userPassword);
             return result;
             //用户存在，但密码输入错误
-        }else if(!userMapper.selectUserPassword(accountId).equals(passwordMD5) ){
+//            !userMapper.selectUserPassword(accountId).equals(passwordMD5)
+        }else if(!users.get(0).getUserPassword().equals(passwordMD5) ){
             result = "1";
             return result;
 //            return "账号或密码输入错误";
-        }else if(userMapper.selectUserPassword(accountId).equals(passwordMD5)) {
+//            userMapper.selectUserPassword(accountId).equals(passwordMD5)
+        }else if(users.get(0).getUserPassword().equals(passwordMD5)) {
             try{
                 result = "2";
                 System.out.println(result);
 
                 User user1 = new User();
-                String token = userMapper.selectUserToken(accountId);
+//                String token = userMapper.selectUserToken(accountId);
+                String token = users.get(0).getToken();
                 user1.setToken(token);
-                user1.setUserName(userMapper.selectUserName(accountId));
+//                user1.setUserName(userMapper.selectUserName(accountId));
+                user1.setUserName(users.get(0).getUserName());
                 user1.setAccountId(accountId);
 //            user.setAvatarUrl(githubUser.getAvatarUrl());
 
@@ -175,7 +194,8 @@ public class UserLoginController {
         user1.setToken(token);
         user1.setGmtCreate(System.currentTimeMillis());
 
-        userMapper.addUser(user1);
+//        userMapper.addUser(user1);
+        userMapper.insert(user1);
         return "1";
     }
 

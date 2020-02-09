@@ -2,6 +2,7 @@ package com.travel.community.travel_demo.interceptor;
 
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.User;
+import com.travel.community.travel_demo.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,21 +30,22 @@ public class SessionInterceptor implements HandlerInterceptor {
             for(Cookie cookie : cookies ) {
                 if (cookie.getName().equals("token")){
                     String token = cookie.getValue();
-//                    UserExample userExample = new UserExample();
-//                    userExample.createCriteria()
-//                            .andTokenEqualTo(token);
-//
-//                    List<User> users = userMapper.selectByExample(userExample);
-                    User user = userMapper.findByToken(token);
+                    //可以来拼接各种sql
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria().andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+//                    User user = userMapper.findByToken(token);
+
 //                    因为返回的是列表类型，所以从判断user是否为空，改为判断列表长度是否为0
-//                    if(users.size() != 0){
-//                        request.getSession().setAttribute("user",users.get(0));
+                    if(users.size() != 0){
+                        request.getSession().setAttribute("user",users.get(0));
 //                        Long unreadCount = notificationService.unreadCount(users.get(0).getId());
 //                        request.getSession().setAttribute("unreadCount",unreadCount);
-//                    }
-                    if (user != null){
-                        request.getSession().setAttribute("user",user);
                     }
+//                    if (user != null){
+//                        request.getSession().setAttribute("user",user);
+//                    }
+
                     break;
                 }
             }
