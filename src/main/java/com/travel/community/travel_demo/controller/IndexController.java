@@ -24,8 +24,8 @@ public class IndexController {
     @Autowired
     private QuestionService questionService;
 
-    @Autowired
-    private UserMapper userMapper;
+//    @Autowired
+//    private UserMapper userMapper;
 
     @GetMapping("/")
     public String index(
@@ -35,24 +35,26 @@ public class IndexController {
             @RequestParam(name = "size",defaultValue = "2") Integer size
             )
     {
-        Cookie[] cookies = request.getCookies();
-        if (cookies!=null && cookies.length!=0){
-            for (Cookie cookie : cookies){
-                if (cookie.getName().equals("token")){
-                    String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if (user != null){
-                        request.getSession().setAttribute("user",user);
-                    }
-
-                    break;
-                }
-            }
-        }
-
         PaginationDTO<QuestionDTO> paginationDTO = questionService.list(page,size);
 
         model.addAttribute("pagination",paginationDTO);
         return "index";
+    }
+
+    /**
+     * 退出登录
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response)
+    {
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

@@ -1,10 +1,7 @@
 package com.travel.community.travel_demo.mapper;
 
 import com.travel.community.travel_demo.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,7 +20,7 @@ public interface UserMapper {
     @Insert("insert into user(userName, accountId,userPassword,token,gmtCreate) values(#{userName},#{accountId},#{userPassword},#{token},#{gmtCreate})")
     public void addUser(User user);
 
-    @Insert("insert into user(userName, accountId,userPassword,token,gmtCreate) values(#{userName},#{accountId},#{accountId},#{token},#{gmtCreate})")
+    @Insert("insert into user(userName, accountId,userPassword,token,gmtCreate,avatarUrl) values(#{userName},#{accountId},#{accountId},#{token},#{gmtCreate},#{avatarUrl})")
     public void githubInsert(User user);
 
     @Select("select * from user where token = #{token}")
@@ -34,4 +31,10 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{id}")
     User findById(@Param("id") Long id);
+
+    @Select("select * from user where accountId = #{accountId}")
+    User findByAccountId(@Param("accountId") String accountId);
+
+    @Update("update user set userName=#{userName},token=#{token},avatarUrl=#{avatarUrl} where id=#{id}")
+    void githubUpdate(User dbUser);
 }

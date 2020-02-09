@@ -5,6 +5,7 @@ import com.travel.community.travel_demo.dto.GithubUser;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.User;
 import com.travel.community.travel_demo.provider.GithubProvider;
+import com.travel.community.travel_demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -32,10 +33,7 @@ public class GithubAuthorizeController {
     private String redirectUri;
 
     @Autowired
-    private UserMapper userMapper;
-
-//    @Autowired
-//    private UserService userService;
+    private UserService userService;
 
     @GetMapping("/callback")
     public String githubCallback(@RequestParam(name = "code") String code,
@@ -62,9 +60,9 @@ public class GithubAuthorizeController {
             user.setAccountId(String.valueOf(githubUser.getId()));//将id强制转换为String类型
             user.setAvatarUrl(githubUser.getAvatarUrl());
 
-//            userService.createOrUpdate(user);
+            userService.createOrUpdate(user);
 
-            userMapper.githubInsert(user);
+//            userMapper.githubInsert(user);
             Cookie cookie = new Cookie("token",token);
             response.addCookie(cookie);
 
