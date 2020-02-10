@@ -5,10 +5,7 @@ import com.travel.community.travel_demo.enums.CommentTypeEnum;
 import com.travel.community.travel_demo.enums.NotificationTypeEnum;
 import com.travel.community.travel_demo.exception.CustomizeErrorCode;
 import com.travel.community.travel_demo.exception.CustomizeException;
-import com.travel.community.travel_demo.mapper.CommentMapper;
-import com.travel.community.travel_demo.mapper.QuestionExtMapper;
-import com.travel.community.travel_demo.mapper.QuestionMapper;
-import com.travel.community.travel_demo.mapper.UserMapper;
+import com.travel.community.travel_demo.mapper.*;
 import com.travel.community.travel_demo.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +32,8 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
-//    @Autowired
-//    private CommentExtMapper commentExtMapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
 //
 //    @Autowired
 //    private NotificationMapper notificationMapper;
@@ -64,10 +61,10 @@ public class CommentService {
             commentMapper.insert(comment);
 
             //增加评论数
-//            Comment parentComment = new Comment();
-//            parentComment.setId(comment.getParentId());
-//            parentComment.setCommentCount(1);
-//            commentExtMapper.incCommentCount(parentComment);
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(parentComment);
 
             //创建通知
 //            createNotify(comment, dbComment.getCommentator(),commentator.getUserName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT,question.getId());
