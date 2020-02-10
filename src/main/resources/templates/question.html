@@ -27,7 +27,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4 class="question-title"><span th:text="${question.title}"></span></h4>
                 <span class="text-desc">
-                    作者：<span th:text="${question.user.getUserName()  }"></span> |
+                    作者：<span th:text="${question.user.userName  }"></span> |
                     发布时间：<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')  }"></span> |
                     阅读数：<span th:text="${question.viewCount}"></span>
                 </span>
@@ -64,36 +64,36 @@
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
             <!--            回复内容展示-->
-<!--            <h4 style="margin-top:20px">-->
-<!--                <span th:text="${question.commentCount}"></span>个回复-->
-<!--            </h4>-->
-<!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">-->
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment:${comments}">-->
-<!--                <div class="media">-->
-<!--                    <div class="media-left">-->
-<!--                        <a href="#">-->
-<!--                            &lt;!&ndash;                            用户头像&ndash;&gt;-->
-<!--                            <img class="media-object img-rounded" th:src="${comment.user.avatarUrl}">-->
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                    <div class="media-body" th:id="${'comment-body-'+comment.getId()}">-->
-<!--                        <h5 class="media-heading">-->
-<!--                            <a th:text="${comment.user.getName()}"></a>-->
-<!--                        </h5>-->
-<!--                        &lt;!&ndash;                        回复内容&ndash;&gt;-->
-<!--                        <div th:text="${comment.content}"></div>-->
-<!--                        <div class="menu">-->
-<!--                            <span class="glyphicon glyphicon-thumbs-up icon" aria-hidden="true"></span>-->
-<!--                            <span class="comment-icon" th:data-id="${comment.getId()}" onclick="collapseComments(this)">-->
-<!--                                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>-->
-<!--                                <span th:text="${comment.commentCount}"></span>-->
-<!--                            </span>-->
+            <h4 style="margin-top:20px">
+                <span th:text="${question.commentCount}"></span>个回复
+            </h4>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment:${comments}">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <!--                            用户头像-->
+                            <img class="media-object img-rounded" th:src="${comment.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body" th:id="${'comment-body-'+comment.getId()}">
+                        <h5 class="media-heading">
+                            <a th:text="${comment.user.getUserName()}"></a>
+                        </h5>
+                        <!--                        回复内容-->
+                        <div th:text="${comment.content}"></div>
+                        <div class="menu">
+                            <span class="glyphicon glyphicon-thumbs-up icon" aria-hidden="true"></span>
+                            <span class="comment-icon" th:data-id="${comment.getId()}" onclick="collapseComments(this)">
+                                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                <span th:text="${comment.commentCount}"></span>
+                            </span>
 
-<!--                            <span class="pull-right"-->
-<!--                                  th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd HH:mm')}"></span>-->
-<!--                        </div>-->
+                            <span class="pull-right"
+                                  th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
 
-<!--                        &lt;!&ndash;                        二级评论&ndash;&gt;-->
+                        <!--                        二级评论-->
 <!--                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse sub-comments"-->
 <!--                             th:id="${'comment-'+comment.id}">-->
 <!--                            &lt;!&ndash;                                下面这段已经用js手写拼接出来二级评论&ndash;&gt;-->
@@ -107,9 +107,9 @@
 <!--                                </button>-->
 <!--                            </div>-->
 <!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+                    </div>
+                </div>
+            </div>
 
             <!--            回复输入框部分-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section" style="margin-top:20px">
@@ -123,7 +123,7 @@
                     </div>
                     <div class="media-body profile">
                         <h5 class="media-heading section">
-                            <a th:text="${session.user!=null ?session.user.getUserName():'匿名用户'}"></a>
+                            <a th:text="${session.user!=null ? session.user.getUserName() : '匿名用户'}"></a>
                         </h5>
                     </div>
                 </div>

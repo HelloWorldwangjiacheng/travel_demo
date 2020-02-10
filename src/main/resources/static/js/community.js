@@ -1,7 +1,6 @@
-// require('/js/jquery-3.4.1.min')
 
 /**
-*提交回复，type=1是问题
+*提交问题回复，type=1是问题
  */
 function post() {
     var questionId = $("#question_id").val();
@@ -9,7 +8,7 @@ function post() {
     comment2target(questionId, 1, content);
 }
 /**
- *提交评论,type=2是评论
+ *提交评论回复,type=2是评论
  */
 function comment(e) {
     var commentId = e.getAttribute("data-id");
@@ -41,21 +40,23 @@ function comment2target(targetId, type, content) {
                 alert("发送成功");
                 window.location.reload();
             } else {
-                if (response.code == 2003) {
+                // 2003是未登录的错误码，那么我们让用户看到之后应该自动有一个让用户登录的页面弹出
+                if (response.code == 2003 || response.code==2004) {
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        window.open("https://github.com/login/oauth/authorize?client_id=e2d964df476086c0e719&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
+                        alert("您还未登录，点击确定进入用户登录界面")
+                        // window.open("https://github.com/login/oauth/authorize?client_id=e2d964df476086c0e719&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
+                        window.open("http://localhost:8886/user/login");
                         //为什么要弄这么一个标识呢？因为当其他页面登录和推出登录时，这边页面也能感知到而不用通过服务端提醒（太麻烦）
                         window.localStorage.setItem("closable", true);
                     }
                 } else if (response.code == 2007) {
 
                 } else {
-                    alert(response.message);
+                    console.log(response.message)
                 }
             }
-        },
-        dataType: "json"
+        }
     });
 }
 
@@ -122,8 +123,6 @@ function collapseComments(e) {
                 e.classList.add("active");
             });
         }
-
-
 
     } else {
         comments.removeClass("in");

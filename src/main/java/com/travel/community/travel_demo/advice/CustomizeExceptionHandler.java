@@ -22,14 +22,11 @@ public class CustomizeExceptionHandler {
 //    现在我们想要返回一个json时用responseBody
 //    但是@ResponseBody会报错，所以我们手写一个
     ModelAndView handle(HttpServletRequest request, Throwable ex, Model model, HttpServletResponse response){
-
         String contentType = request.getContentType();
-
         if ("application/json".equals(contentType)){
             //返回JSON
             ResultDTO resultDTO = null;
             if (ex instanceof CustomizeException){
-
                 resultDTO = ResultDTO.errorOf((CustomizeException) ex);
             }else {
                 resultDTO = ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
@@ -55,8 +52,5 @@ public class CustomizeExceptionHandler {
             }
             return new ModelAndView("error");
         }
-
-
     }
-
 }

@@ -4,6 +4,7 @@ import com.travel.community.travel_demo.dto.PaginationDTO;
 import com.travel.community.travel_demo.dto.QuestionDTO;
 import com.travel.community.travel_demo.exception.CustomizeErrorCode;
 import com.travel.community.travel_demo.exception.CustomizeException;
+import com.travel.community.travel_demo.mapper.QuestionExtMapper;
 import com.travel.community.travel_demo.mapper.QuestionMapper;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.Question;
@@ -20,6 +21,9 @@ import java.util.List;
 
 @Service
 public class QuestionService {
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -164,5 +168,22 @@ public class QuestionService {
             }
 
         }
+    }
+
+    public void incView(Long id) {
+//        下面这段被注释的代码其实也是能够完成简单的阅读数的增加的，但是会出现一个问题
+//        就是当有出现高并发的情况的时候可能会出现数据不一致的情况
+//        Question question = questionMapper.selectByPrimaryKey(id);
+//        Question updateQuestion = new Question();
+//        updateQuestion.setViewCount(question.getViewCount()+1);
+//        QuestionExample example = new QuestionExample();
+//        example.createCriteria().andIdEqualTo(id);
+//        questionMapper.updateByExampleSelective(updateQuestion,example);
+
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
+
     }
 }
