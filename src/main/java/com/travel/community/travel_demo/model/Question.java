@@ -1,5 +1,9 @@
 package com.travel.community.travel_demo.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel("问题实体类Question")
 public class Question {
     /**
      *
@@ -8,6 +12,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("问题主键id")
     private Long id;
 
     /**
@@ -17,6 +22,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("问题名")
     private String title;
 
     /**
@@ -26,6 +32,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("问题创建时间")
     private Long gmtCreate;
 
     /**
@@ -35,6 +42,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("问题创建者")
     private Long creator;
 
     /**
@@ -44,6 +52,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("评论数")
     private Integer commentCount;
 
     /**
@@ -53,6 +62,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("浏览数")
     private Integer viewCount;
 
     /**
@@ -62,6 +72,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("点赞数")
     private Integer likeCount;
 
     /**
@@ -71,6 +82,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("问题标签串")
     private String tag;
 
     /**
@@ -80,6 +92,7 @@ public class Question {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("问题描述(内容)")
     private String description;
 
     /**

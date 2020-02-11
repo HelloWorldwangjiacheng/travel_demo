@@ -1,5 +1,6 @@
 package com.travel.community.travel_demo.controller;
 
+import com.travel.community.travel_demo.cache.TagCache;
 import com.travel.community.travel_demo.dto.QuestionDTO;
 import com.travel.community.travel_demo.mapper.QuestionMapper;
 import com.travel.community.travel_demo.mapper.UserMapper;
@@ -7,6 +8,8 @@ import com.travel.community.travel_demo.model.Question;
 import com.travel.community.travel_demo.model.User;
 import com.travel.community.travel_demo.model.UserExample;
 import com.travel.community.travel_demo.service.QuestionService;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+
 @Controller
 public class PublishController {
 
@@ -27,6 +31,7 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+    @ApiOperation("发布接口/publish")
     @GetMapping("/publish")
     public String Publish(Model model){
 //        model.addAttribute("tags", TagCache.get());

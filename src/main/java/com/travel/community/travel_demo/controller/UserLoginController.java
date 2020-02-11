@@ -23,17 +23,20 @@ public class UserLoginController {
     @Autowired
     private UserMapper userMapper;
 
-    @RequestMapping("/telephoneRegister")
+//    @RequestMapping("/telephoneRegister")
+    @GetMapping("/telephoneRegister")
     public String telephoneRegister() {
         return "telephoneRegister";
     }
 
-    @RequestMapping("/register")
+//    @RequestMapping("/register")
+    @GetMapping("/register")
     public String register() {
         return "register";
     }
 
-    @RequestMapping("/login")
+//    @RequestMapping("/login")
+    @GetMapping("/login")
     public String login() {
         return "login";
     }
@@ -61,7 +64,8 @@ public class UserLoginController {
     }
 
 //    @ResponseBody
-    @RequestMapping(value = "/successLogin", method = RequestMethod.POST)
+//    @RequestMapping(value = "/successLogin", method = RequestMethod.POST)
+    @PostMapping(value = "/successLogin")
     public String successLogin(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -94,11 +98,13 @@ public class UserLoginController {
 //        return "successLogin";
     }
 
-    @RequestMapping("/successRegister")
+//    @RequestMapping("/successRegister")
+    @GetMapping("/successRegister")
     public String successRegister() { return "successRegister"; }
 
     @ResponseBody
-    @RequestMapping(value = "/select", method = RequestMethod.POST)
+//    @RequestMapping(value = "/select", method = RequestMethod.POST)
+    @PostMapping(value = "/select")
     public String select(@RequestBody User user) {
         System.out.println(user.getUserName()+"---"+user.getAccountId());
 //        String result = userMapper.selectUserName(user.getAccountId());
@@ -114,7 +120,8 @@ public class UserLoginController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/selectUserName", method = RequestMethod.POST)
+//    @RequestMapping(value = "/selectUserName", method = RequestMethod.POST)
+    @PostMapping(value = "/selectUserName")
     public String selectUserName(@RequestBody User user,
                                  HttpServletRequest request,
                                  HttpServletResponse response)
@@ -178,7 +185,8 @@ public class UserLoginController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+//    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    @PostMapping(value = "/addUser")
     public String addUser(@RequestBody User user) {
         String userName = user.getUserName();
         String accountId = user.getAccountId();

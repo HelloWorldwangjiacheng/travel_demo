@@ -1,5 +1,8 @@
 package com.travel.community.travel_demo.model;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel("评论实体类")
 public class Comment {
     /**
      *

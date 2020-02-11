@@ -1,5 +1,9 @@
 package com.travel.community.travel_demo.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel("用户实体类User")
 public class User {
     /**
      *
@@ -8,6 +12,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户主键id")
     private Long id;
 
     /**
@@ -17,6 +22,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户账号")
     private String accountId;
 
     /**
@@ -26,6 +32,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户名")
     private String userName;
 
     /**
@@ -35,6 +42,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户手机电话")
     private String userTelephone;
 
     /**
@@ -44,6 +52,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户邮箱")
     private String userEmail;
 
     /**
@@ -53,6 +62,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户令牌")
     private String token;
 
     /**
@@ -62,6 +72,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户创建时间")
     private Long gmtCreate;
 
     /**
@@ -71,6 +82,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户密码")
     private String userPassword;
 
     /**
@@ -80,6 +92,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户类型")
     private Integer userType;
 
     /**
@@ -89,6 +102,7 @@ public class User {
      *
      * @mbg.generated Sun Feb 09 22:41:03 CST 2020
      */
+    @ApiModelProperty("用户图片链接")
     private String avatarUrl;
 
     /**

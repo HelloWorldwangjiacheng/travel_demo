@@ -15,17 +15,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
 @Controller
 public class CommentController {
-
     @Autowired
     private UserMapper userMapper;
 
@@ -67,18 +63,11 @@ public class CommentController {
         return ResultDTO.okOf();
     }
 
-
-
-
     @ResponseBody
     @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
     public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id) {
-
         List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.COMMENT);
-
         return ResultDTO.okOf(commentDTOS);
     }
-
-
 
 }
