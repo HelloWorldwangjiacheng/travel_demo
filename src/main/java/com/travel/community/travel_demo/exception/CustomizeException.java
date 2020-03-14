@@ -1,5 +1,8 @@
 package com.travel.community.travel_demo.exception;
 
+/**
+ * @author w1586
+ */
 public class CustomizeException extends RuntimeException{
     private String message;
     private Integer code;

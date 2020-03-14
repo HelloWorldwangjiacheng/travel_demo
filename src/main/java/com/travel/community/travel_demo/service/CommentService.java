@@ -2,6 +2,7 @@ package com.travel.community.travel_demo.service;
 
 import com.travel.community.travel_demo.dto.CommentDTO;
 import com.travel.community.travel_demo.enums.CommentTypeEnum;
+import com.travel.community.travel_demo.enums.NotificationStatusEnum;
 import com.travel.community.travel_demo.enums.NotificationTypeEnum;
 import com.travel.community.travel_demo.exception.CustomizeErrorCode;
 import com.travel.community.travel_demo.exception.CustomizeException;
@@ -34,14 +35,14 @@ public class CommentService {
 
     @Autowired
     private CommentExtMapper commentExtMapper;
-//
-//    @Autowired
-//    private NotificationMapper notificationMapper;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     //使用了Transactional注解能够加强事务性，尤其是原子性，只要其中一个不行就都不行
     @Transactional
     public void insert(Comment comment, User commentator) {
-        if (comment.getParentId() == null || comment.getParentId() == 0){
+        if (comment.getParentId() == null || comment.getParentId() <= 0){
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
         if (comment.getType() == null || !CommentTypeEnum.isExist(comment.getType())){
@@ -67,7 +68,7 @@ public class CommentService {
             commentExtMapper.incCommentCount(parentComment);
 
             //创建通知
-//            createNotify(comment, dbComment.getCommentator(),commentator.getUserName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT,question.getId());
+            createNotify(comment, dbComment.getCommentator(),commentator.getUserName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT,question.getId());
         }else{
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -79,31 +80,31 @@ public class CommentService {
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
             //创建通知
-//            createNotify(comment,question.getCreator(), commentator.getUserName(), question.getTitle(),NotificationTypeEnum.REPLY_QUESTION,question.getId());
+            createNotify(comment,question.getCreator(), commentator.getUserName(), question.getTitle(),NotificationTypeEnum.REPLY_QUESTION,question.getId());
         }
     }
 
-    /*
+
     private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
         //如果接受的人和评论的人是同一人，也就是自己给自己回复那么将不会有回复通知
         if (receiver == comment.getCommentator()){
             return ;
         }
-
+        //剩下的就是接收的人和评论的人不是同一人，那就有必要构建一个通知
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(notificationType.getType());
         //当前我的评论人
         notification.setNotifier(comment.getCommentator());
 
-        notification.setOuterid(outerId);
+        notification.setOuterId(outerId);
         notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
         notification.setReceiver(receiver);
         notification.setNotifierName(notifierName);
         notification.setOuterTitle(outerTitle);
         notificationMapper.insert(notification);
     }
-*/
+
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()

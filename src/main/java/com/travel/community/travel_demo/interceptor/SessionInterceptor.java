@@ -3,6 +3,7 @@ package com.travel.community.travel_demo.interceptor;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.User;
 import com.travel.community.travel_demo.model.UserExample;
+import com.travel.community.travel_demo.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,9 +20,9 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     private UserMapper userMapper;
-//
-//    @Autowired
-//    private NotificationService notificationService;
+
+    @Autowired
+    private NotificationService notificationService;
 //
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -36,11 +37,13 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
 //                    User user = userMapper.findByToken(token);
 
-//                    因为返回的是列表类型，所以从判断user是否为空，改为判断列表长度是否为0
+                    /**
+                     * 因为返回的是列表类型，所以从判断user是否为空，改为判断列表长度是否为0
+                     */
                     if(users.size() != 0){
                         request.getSession().setAttribute("user",users.get(0));
-//                        Long unreadCount = notificationService.unreadCount(users.get(0).getId());
-//                        request.getSession().setAttribute("unreadCount",unreadCount);
+                        Long unreadCount = notificationService.unreadCount(users.get(0).getId());
+                        request.getSession().setAttribute("unreadCount",unreadCount);
                     }
 //                    if (user != null){
 //                        request.getSession().setAttribute("user",user);

@@ -4,6 +4,7 @@ import com.travel.community.travel_demo.dto.PaginationDTO;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.User;
 import com.travel.community.travel_demo.model.UserExample;
+import com.travel.community.travel_demo.service.NotificationService;
 import com.travel.community.travel_demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,12 +17,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * @author w1586
+ */
 @Controller
 public class ProfileController1 {
     //为什么起名ProfileController1 因为ProfileController和某配置文件重名了
 
-//    @Autowired
-//    private NotificationService notificationService;
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private QuestionService questionService;
@@ -54,9 +58,10 @@ public class ProfileController1 {
             PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("pagination",paginationDTO);
         }else if ("replies".equals(action)){
-////            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
 //            Long unreadCount = notificationService.unreadCount(user.getId());
-//            model.addAttribute("pagination",paginationDTO);
+//            model.addAttribute("unreadCount",unreadCount);
+            model.addAttribute("pagination",paginationDTO);
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","最新回复");
         }

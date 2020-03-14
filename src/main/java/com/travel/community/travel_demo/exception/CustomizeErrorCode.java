@@ -1,5 +1,9 @@
 package com.travel.community.travel_demo.exception;
 
+/**
+ * @author w1586
+ */
+
 public enum CustomizeErrorCode implements ICustomizeErrorCode {
 
     QUESTION_NOT_FOUND(2001,"你找到的问题不在了，要不要换一个试试？"),

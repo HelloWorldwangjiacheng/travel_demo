@@ -5,6 +5,8 @@ import com.travel.community.travel_demo.dto.QuestionDTO;
 import com.travel.community.travel_demo.mapper.UserMapper;
 import com.travel.community.travel_demo.model.Question;
 import com.travel.community.travel_demo.model.User;
+import com.travel.community.travel_demo.model.UserExample;
+import com.travel.community.travel_demo.service.NotificationService;
 import com.travel.community.travel_demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
@@ -18,14 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * @author w1586
+ */
 @Controller
 public class IndexController {
 
     @Autowired
     private QuestionService questionService;
 
-//    @Autowired
-//    private UserMapper userMapper;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private UserMapper userMapper;
 
     @GetMapping("/")
     public String index(
@@ -35,8 +42,18 @@ public class IndexController {
             @RequestParam(name = "size",defaultValue = "2") Integer size
             )
     {
+//
+//        User user1 = (User) request.getSession().getAttribute("user");
+//
+//        UserExample example = new UserExample();
+//        example.createCriteria().andAccountIdEqualTo(user1.getAccountId());
+//        List<User> users = userMapper.selectByExample(example);
+//        User user = users.get(0);
+
         PaginationDTO<QuestionDTO> paginationDTO = questionService.list(page,size);
 
+//        Long unreadCount = notificationService.unreadCount(user.getId());
+//        model.addAttribute("unreadCount",unreadCount);
         model.addAttribute("pagination",paginationDTO);
         return "index";
     }

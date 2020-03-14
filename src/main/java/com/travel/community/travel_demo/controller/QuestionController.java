@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@ApiOperation("问题控制类QuestionController")
 @Controller
 public class QuestionController {
 

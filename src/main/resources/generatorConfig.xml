@@ -48,6 +48,8 @@
         <table  tableName="comment" domainObjectName="Comment" >
             <property name="useActualColumnNames" value="true"/>
         </table>
-<!--        <table  tableName="notification" domainObjectName="Notification" ></table>-->
+        <table  tableName="notification" domainObjectName="Notification" >
+            <property name="useActualColumnNames" value="true"/>
+        </table>
     </context>
 </generatorConfiguration>

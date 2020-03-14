@@ -1,14 +1,16 @@
 创建SQL
 ```sql
 CREATE TABLE `user` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT,
-	`account_id` VARCHAR(128) ,
-	`name` VARCHAR(64) ,
+	`id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+	`accountId` VARCHAR(128) ,
+	`userName` VARCHAR(64) ,
 	`token` CHAR(36) ,
-	`gmt_create` BIGINT ,
-	`password` VARCHAR(128),
-	`user_type` INT,
-	`avatar_url` VARCHAR(128)
+	`gmtCreate` BIGINT ,
+	`userPassword` VARCHAR(128),
+	`userType` INT,
+	`avatarUrl` VARCHAR(128),
+    `userTelephone` VARCHAR(11),
+    `userEmail` VARCHAR(32) 
 );
 
 CREATE TABLE question (
@@ -16,7 +18,7 @@ CREATE TABLE question (
 	title VARCHAR(50),
 	description TEXT,
 	gmtCreate BIGINT,
-	createor BIGINT,
+	creator BIGINT,
 	commentCount INT DEFAULT 0,
 	viewCount INT DEFAULT 0,
 	likeCount INT DEFAULT 0,

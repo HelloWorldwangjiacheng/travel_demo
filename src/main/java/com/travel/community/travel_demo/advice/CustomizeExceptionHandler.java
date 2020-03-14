@@ -14,16 +14,30 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * @author w1586
+ */
 @ControllerAdvice
 public class CustomizeExceptionHandler {
+
+    /**
+     * 规范化统一处理错误异常，
+     * ModelAndView因为我们不希望它返回json所以把responseBody去掉，
+     * 现在我们想要返回一个json时用responseBody，
+     * 但是@ResponseBody会报错，所以我们手写一个
+     * @param request
+     * @param ex
+     * @param model
+     * @param response
+     * @return
+     */
+    private static String APPLICATION_JSON = "application/json";
+
     @ExceptionHandler(Exception.class)
-//    规范化统一处理错误异常
-//    ModelAndView因为我们不希望它返回json所以把responseBody去掉
-//    现在我们想要返回一个json时用responseBody
-//    但是@ResponseBody会报错，所以我们手写一个
     ModelAndView handle(HttpServletRequest request, Throwable ex, Model model, HttpServletResponse response){
         String contentType = request.getContentType();
-        if ("application/json".equals(contentType)){
+        //下面如果直接用application/json就会变成魔法值，导致可读性的下降
+        if (APPLICATION_JSON.equals(contentType)){
             //返回JSON
             ResultDTO resultDTO = null;
             if (ex instanceof CustomizeException){

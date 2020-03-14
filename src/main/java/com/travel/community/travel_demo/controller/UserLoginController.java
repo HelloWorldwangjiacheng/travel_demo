@@ -16,6 +16,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author w1586
+ */
 @Controller
 @RequestMapping("/user")
 public class UserLoginController {
@@ -23,19 +26,16 @@ public class UserLoginController {
     @Autowired
     private UserMapper userMapper;
 
-//    @RequestMapping("/telephoneRegister")
     @GetMapping("/telephoneRegister")
     public String telephoneRegister() {
         return "telephoneRegister";
     }
 
-//    @RequestMapping("/register")
     @GetMapping("/register")
     public String register() {
         return "register";
     }
 
-//    @RequestMapping("/login")
     @GetMapping("/login")
     public String login() {
         return "login";
@@ -45,6 +45,7 @@ public class UserLoginController {
 //    public String successLogin(){
 //        return "successLogin";
 //    }
+
 
     /**
      * 退出登录
